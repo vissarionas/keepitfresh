@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "221933519847",
+    "firebase_url": "https://keepitfresh-4a10d.firebaseio.com",
+    "project_id": "keepitfresh-4a10d",
+    "storage_bucket": "keepitfresh-4a10d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221933519847:android:1a864bb0f982b690",
+        "android_client_info": {
+          "package_name": "com.abubaca.viss.keepitfresh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "221933519847-e3osm0gpaduvsdr7c5vk7dj14e43ao9i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.abubaca.viss.keepitfresh",
+            "certificate_hash": "1ea2b9b2a61ee07d5952b3ac91f2c4bf152675e0"
+          }
+        },
+        {
+          "client_id": "221933519847-s0u5p13db9pfofgh74qjeegevluqegsj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvyM_EnOnKdtR7EwignK35JxR8cfz1Gjo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "221933519847-s0u5p13db9pfofgh74qjeegevluqegsj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
