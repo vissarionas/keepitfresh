@@ -87,6 +87,4 @@ public class PopupDialog {
         dialog.setTitle(R.string.add_product);
         dialog.show();
     }
-
-
 }
