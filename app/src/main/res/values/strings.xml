@@ -5,6 +5,8 @@
     <string name="add_product">Add new product</string>
     <string name="new_entry">New Entry</string>
     <string name="submit">Submit</string>
+    <string name="category_title">Categories</string>
+    <string name="product_title">Products</string>
 
     <string name="action_sign_in_short">Register</string>
     <string name="email">Email</string>
