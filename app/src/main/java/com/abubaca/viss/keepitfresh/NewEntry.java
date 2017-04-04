@@ -19,8 +19,10 @@ public class NewEntry extends AppCompatActivity {
 
     private static final String TAG = "NEW_CATEGORY_ACTIVITY";
     DatabaseReference databaseReference;
-    Button addCategoryBtn;
+    Button addCategoryBtn , addProductBtn;
     Spinner categorySpinner , productSpinner;
+    String currentCategory;
+    SpinnerAdapter productAdapter , categoryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,19 +36,31 @@ public class NewEntry extends AppCompatActivity {
         categorySpinner = (Spinner)findViewById(R.id.category_spinner);
         productSpinner = (Spinner)findViewById(R.id.product_spinner);
         addCategoryBtn = (Button)findViewById(R.id.add_category_btn);
+        addProductBtn = (Button)findViewById(R.id.add_product_btn);
+
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 List<String> categories = getChildren(dataSnapshot , "");
-                final SpinnerAdapter categoryAdapter = new SpinnerAdapter(getApplicationContext() , categories);
+                categoryAdapter = new SpinnerAdapter(getApplicationContext() , categories);
                 categorySpinner.setAdapter(categoryAdapter);
                 categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        List<String> codes = getChildren(dataSnapshot , categoryAdapter.getItem(position).toString());
-                        SpinnerAdapter productAdapter = new SpinnerAdapter(getApplicationContext() , codes);
+                        currentCategory = categoryAdapter.getItem(position).toString();
+                        List<String> codes = getChildren(dataSnapshot , currentCategory);
+                        productAdapter = new SpinnerAdapter(getApplicationContext() , codes);
                         productSpinner.setAdapter(productAdapter);
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
+                productSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Log.i(TAG , productAdapter.getItem(position).toString());
                     }
 
                     @Override
@@ -65,6 +79,14 @@ public class NewEntry extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new PopupDialog(NewEntry.this).addCategory();
+            }
+        });
+
+        addProductBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!currentCategory.equals(""))
+                    new PopupDialog(NewEntry.this).addProduct(currentCategory);
             }
         });
     }

@@ -35,7 +35,7 @@ public class PopupDialog {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         categoryET.setLayoutParams(params);
-        categoryET.setHint("type your new category");
+        categoryET.setHint("type new category");
         categoryET.setInputType(InputType.TYPE_CLASS_TEXT);
         categoryET.setFilters(new InputFilter[] {new InputFilter.LengthFilter(30)});
         categoryET.setSelection(categoryET.getText().length());
@@ -55,6 +55,36 @@ public class PopupDialog {
         Dialog dialog = dialogBuilder.create();
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.setTitle(R.string.add_category);
+        dialog.show();
+    }
+
+    void addProduct(final String categoryName){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
+        final EditText productET = new EditText(activity);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        productET.setLayoutParams(params);
+        productET.setHint("type new product");
+        productET.setInputType(InputType.TYPE_CLASS_TEXT);
+        productET.setFilters(new InputFilter[] {new InputFilter.LengthFilter(30)});
+        productET.setSelection(productET.getText().length());
+        dialogBuilder.setView(productET);
+        dialogBuilder.setPositiveButton(R.string.ok,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String productName = productET.getText().toString();
+                        if(!productName.equals("")){
+                            database = database.child(categoryName).child(productName);
+                            database.setValue("");
+                            database = database.getParent();
+                        }
+                    }
+                });
+        Dialog dialog = dialogBuilder.create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        dialog.setTitle(R.string.add_product);
         dialog.show();
     }
 
