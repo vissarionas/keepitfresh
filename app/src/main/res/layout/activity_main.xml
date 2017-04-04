@@ -7,44 +7,10 @@
     android:orientation="vertical">
 
 
-    <EditText
-        android:id="@+id/input1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number" />
-
-    <EditText
-        android:id="@+id/input2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number" />
-
-    <EditText
-        android:id="@+id/input3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number" />
-
-    <EditText
-        android:id="@+id/input4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number" />
-
     <Button
-        android:id="@+id/submit_btn"
+        android:id="@+id/new_entry_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="submit"/>
-
-    <Button
-        android:id="@+id/new_category_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="+category"/>
+        android:text="@string/new_entry"/>
 
 </LinearLayout>
