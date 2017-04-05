@@ -12,8 +12,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -112,9 +114,10 @@ public class NewEntry extends AppCompatActivity {
     }
 
     private void pushEntry(String category, String product , int quantity){
-        databaseReference = databaseReference.getRoot().child(category).child(product).child("entry"+getDateStamp());
-        databaseReference.child("Quantity").setValue(quantity);
-        databaseReference.child("xaxaxa").setValue("e re");
+        databaseReference = databaseReference.getRoot().child(category).child(product).child("entries").child("entry"+getDateTimeStamp());
+        databaseReference.child("quantity").setValue(quantity);
+        databaseReference.child("input_date").setValue(getDateStamp());
+        databaseReference.child("output_date").setValue(addDaysToDate(getDateStamp()));
         databaseReference = databaseReference.getRoot();
     }
 
@@ -127,8 +130,28 @@ public class NewEntry extends AppCompatActivity {
         return children;
     }
 
+    private String getDateTimeStamp(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        return "_"+sdf.format(new Date());
+    }
+
     private String getDateStamp(){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy");
         return sdf.format(new Date());
+    }
+
+    private String addDaysToDate(String date){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy");
+        Calendar c = Calendar.getInstance();
+
+        try {
+            c.setTime(sdf.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        c.add(Calendar.DATE, 4);  // number of days to add, can also use Calendar.DAY_OF_MONTH in place of Calendar.DATE
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yy");
+        return sdf1.format(c.getTime());
     }
 }
