@@ -25,29 +25,23 @@ public class MainActivity extends AppCompatActivity {
     private final static String TAG = "MAIN_ACTIVITY";
 
     Button newEntryBtn;
+    DatabaseReference database;
+    DataSnapshot snapshot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        logDate();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        newEntryBtn = (Button)findViewById(R.id.new_entry_btn);
-        newEntryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), NewEntry.class));
-            }
-        });
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        database.addValueEventListener(new ValueEventListener() {
+        database = FirebaseDatabase.getInstance().getReference();
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                logCodes(dataSnapshot , "");
+                removeEntries(dataSnapshot);
             }
 
             @Override
@@ -55,23 +49,37 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        newEntryBtn = (Button)findViewById(R.id.new_entry_btn);
+        newEntryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), NewEntry.class));
+            }
+        });
     }
 
-    private void logCodes(DataSnapshot snapshot, String parent){
-        List<String> codes = new ArrayList<>();
-        for(DataSnapshot productsSnapshot : snapshot.child(parent).getChildren()){
-            for(DataSnapshot codesSnapshot : snapshot.child(productsSnapshot.getKey()).getChildren()){
-                String code = codesSnapshot.getKey();
-                codes.add(code);
-                if(code.contains("04")) Log.i(TAG , codesSnapshot.getRef().getParent().getKey().toString());
+    private void removeEntries(DataSnapshot snapshot){
+        for(DataSnapshot categorySnapshot : snapshot.child("").getChildren()){
+            if(categorySnapshot.getChildrenCount()>0){
+                for(DataSnapshot productSnapshot : categorySnapshot.getChildren()){
+                    if(productSnapshot.getChildrenCount()>0){
+                        String product = productSnapshot.getKey();
+                        for(DataSnapshot featureSnapshot : productSnapshot.getChildren()){
+                            if(featureSnapshot.getChildrenCount()>0){
+                                for(DataSnapshot entrySnapshot : featureSnapshot.getChildren()){
+                                    if((entrySnapshot.getKey().substring(0 , 5).equals("entry"))){
+//                                        entrySnapshot.getRef().removeValue();
+                                        if(entrySnapshot.child("input_date").exists()){
+                                            Log.i(TAG , product+"\n"+entrySnapshot.child("input_date").getValue().toString());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-        Log.i(TAG , codes+"");
-    }
-
-    private void logDate(){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        String currentDateandTime = sdf.format(new Date());
-        Log.i(TAG , currentDateandTime);
     }
 }
