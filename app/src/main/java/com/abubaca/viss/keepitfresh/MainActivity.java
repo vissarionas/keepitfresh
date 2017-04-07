@@ -5,8 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
 
     Button newEntryBtn;
     DatabaseReference database;
+    Spinner listViewSpinner;
+    DataSnapshot dataSnapshot;
+    List<Product> products;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +38,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        products = new ArrayList<>();
+        setListViewSpinner();
         database = FirebaseDatabase.getInstance().getReference();
         database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                populateProductList(dataSnapshot);
+                MainActivity.this.dataSnapshot = dataSnapshot;
+                products.clear();
+                products.addAll(new Queries().listProducts(dataSnapshot));
+                populateProductList(products);
             }
 
             @Override
@@ -55,13 +65,48 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void populateProductList(DataSnapshot dataSnapshot){
-        List<Product> products = new ArrayList<>();
-        products.addAll(new Queries().listPromoteProducts(dataSnapshot));
-        products.addAll(new Queries().listExpiredProducts(dataSnapshot));
-
+    private void populateProductList(List<Product> products){
         ListView productLV = (ListView)findViewById(R.id.product_LV);
         ProductListAdapter adapter = new ProductListAdapter(this , products);
         productLV.setAdapter(adapter);
+    }
+
+    private void setListViewSpinner(){
+        List<String> views = new ArrayList<>();
+        views.add("ALL");
+        views.add("PROMOTE");
+        views.add("EXPIRED");
+        listViewSpinner = (Spinner)findViewById(R.id.list_view_spinner);
+        SpinnerAdapter adapter = new SpinnerAdapter(getApplicationContext(), android.R.layout.simple_spinner_item , views);
+        listViewSpinner.setAdapter(adapter);
+        listViewSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(dataSnapshot!=null) {
+                    switch (position) {
+                        case (0):
+                            products.clear();
+                            products.addAll(new Queries().listProducts(dataSnapshot));
+                            populateProductList(products);
+                            break;
+                        case (1):
+                            products.clear();
+                            products.addAll(new Queries().listPromoteProducts(dataSnapshot));
+                            populateProductList(products);
+                            break;
+                        case (2):
+                            products.clear();
+                            products.addAll(new Queries().listExpiredProducts(dataSnapshot));
+                            populateProductList(products);
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 }

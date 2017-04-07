@@ -4,12 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.abubaca.viss.keepitfresh.MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="2">
 
+
+    <Spinner
+        android:id="@+id/list_view_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.7" />
 
     <ListView
         android:id="@+id/product_LV"
-        android:layout_weight="1.9"
+        android:layout_weight="0.3"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

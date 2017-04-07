@@ -24,7 +24,7 @@ public class SpinnerAdapter extends BaseAdapter {
     List<String> objects;
     Context context;
 
-    public SpinnerAdapter(Context context, List<String> objects) {
+    public SpinnerAdapter(Context context, int simple_spinner_item, List<String> objects) {
         this.objects = objects;
         this.context = context;
         layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

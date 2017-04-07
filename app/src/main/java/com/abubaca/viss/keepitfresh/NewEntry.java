@@ -45,13 +45,13 @@ public class NewEntry extends AppCompatActivity {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 NewEntry.this.dataSnapshot = dataSnapshot;
-                categoryAdapter = new SpinnerAdapter(getApplicationContext() , queries.getCategories(dataSnapshot));
+                categoryAdapter = new SpinnerAdapter(getApplicationContext() , android.R.layout.simple_spinner_item, queries.getCategories(dataSnapshot));
                 categorySpinner.setAdapter(categoryAdapter);
                 categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         currentCategory = categoryAdapter.getItem(position).toString();
-                        productAdapter = new SpinnerAdapter(getApplicationContext() , queries.getProducts(dataSnapshot , currentCategory));
+                        productAdapter = new SpinnerAdapter(getApplicationContext() , android.R.layout.simple_spinner_item, queries.getProducts(dataSnapshot , currentCategory));
                         productSpinner.setAdapter(productAdapter);
                     }
                     @Override
