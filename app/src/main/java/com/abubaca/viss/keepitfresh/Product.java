@@ -6,21 +6,18 @@ package com.abubaca.viss.keepitfresh;
 
 public class Product {
 
-    String name, description;
+    String name;
     int duration;
 
-    public Product(String name, String description, int duration){
+    public Product(String name, int duration){
         this.name = name;
-        this.description = description;
         this.duration = duration;
     }
 
     public String getName(){
         return  this.name;
     }
-    public String getDescription(){
-        return this.description;
-    }
+
     public int getDuration(){
         return this.duration;
     }

@@ -15,7 +15,6 @@ public class NewEntry extends AppCompatActivity {
 
     private static final String TAG = "NEW_CATEGORY_ACTIVITY";
     DatabaseReference databaseReference;
-    DataSnapshot dataSnapshot;
     Button addCategoryBtn , addProductBtn , submitBtn;
     Spinner categorySpinner , productSpinner;
     String currentCategory , currentProduct;
@@ -38,20 +37,18 @@ public class NewEntry extends AppCompatActivity {
         addProductBtn = (Button)findViewById(R.id.add_product_btn);
         submitBtn = (Button)findViewById(R.id.submit_btn);
         quantityET = (EditText)findViewById(R.id.quantityET);
-        queries = new Queries();
-
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
-                NewEntry.this.dataSnapshot = dataSnapshot;
-                categoryAdapter = new SpinnerAdapter(getApplicationContext() , android.R.layout.simple_spinner_item, queries.getCategories(dataSnapshot));
+                queries = new Queries(dataSnapshot);
+                categoryAdapter = new SpinnerAdapter(getApplicationContext() , android.R.layout.simple_spinner_item, queries.getCategories());
                 categorySpinner.setAdapter(categoryAdapter);
                 categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         currentCategory = categoryAdapter.getItem(position).toString();
-                        productAdapter = new SpinnerAdapter(getApplicationContext() , android.R.layout.simple_spinner_item, queries.getProducts(dataSnapshot , currentCategory));
+                        productAdapter = new SpinnerAdapter(getApplicationContext() , android.R.layout.simple_spinner_item, queries.getProducts(currentCategory));
                         productSpinner.setAdapter(productAdapter);
                     }
                     @Override
@@ -101,8 +98,8 @@ public class NewEntry extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 if(!currentCategory.equals("") && !currentProduct.equals("") && quantity>0){
-                    int duration = queries.getProductDuration(dataSnapshot , currentProduct);
-                    queries.pushEntry(databaseReference , currentCategory , currentProduct , quantity , duration);
+                    int duration = queries.getProductDuration(currentProduct);
+                    queries.pushFifoEntry(currentCategory , currentProduct , quantity , duration);
                 }
             }
         });

@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
     Button newEntryBtn;
     DatabaseReference database;
     Spinner listViewSpinner;
-    DataSnapshot dataSnapshot;
     List<Product> products;
+    Queries queries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +39,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         products = new ArrayList<>();
-        setListViewSpinner();
         database = FirebaseDatabase.getInstance().getReference();
         database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                MainActivity.this.dataSnapshot = dataSnapshot;
+                queries = new Queries(dataSnapshot);
                 products.clear();
-                products.addAll(new Queries().listProducts(dataSnapshot));
+                products.addAll(queries.listProducts());
                 populateProductList(products);
+                setListViewSpinner();
             }
 
             @Override
@@ -82,24 +82,22 @@ public class MainActivity extends AppCompatActivity {
         listViewSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(dataSnapshot!=null) {
-                    switch (position) {
-                        case (0):
-                            products.clear();
-                            products.addAll(new Queries().listProducts(dataSnapshot));
-                            populateProductList(products);
-                            break;
-                        case (1):
-                            products.clear();
-                            products.addAll(new Queries().listPromoteProducts(dataSnapshot));
-                            populateProductList(products);
-                            break;
-                        case (2):
-                            products.clear();
-                            products.addAll(new Queries().listExpiredProducts(dataSnapshot));
-                            populateProductList(products);
-                            break;
-                    }
+                switch (position) {
+                    case (0):
+                        products.clear();
+                        products.addAll(queries.listProducts());
+                        populateProductList(products);
+                        break;
+                    case (1):
+                        products.clear();
+                        products.addAll(queries.listPromoteProducts());
+                        populateProductList(products);
+                        break;
+                    case (2):
+                        products.clear();
+                        products.addAll(queries.listExpiredProducts());
+                        populateProductList(products);
+                        break;
                 }
             }
 
