@@ -43,9 +43,9 @@ public class ProductListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = layoutInflater.inflate(R.layout.product_list_item , parent , false);
         TextView productListTV = (TextView)convertView.findViewById(R.id.product_list_TV);
-        TextView expireDateTV = (TextView)convertView.findViewById(R.id.expire_date_TV);
+        TextView categoryListTV = (TextView)convertView.findViewById(R.id.category_list_TV);
         productListTV.setText(products.get(position).getName());
-        expireDateTV.setText(String.valueOf(products.get(position).getDuration()));
+        categoryListTV.setText(String.valueOf(products.get(position).getDuration()));
         return convertView;
     }
 }

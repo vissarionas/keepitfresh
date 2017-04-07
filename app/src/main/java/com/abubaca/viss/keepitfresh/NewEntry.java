@@ -100,6 +100,10 @@ public class NewEntry extends AppCompatActivity {
                 if(!currentCategory.equals("") && !currentProduct.equals("") && quantity>0){
                     int duration = queries.getProductDuration(currentProduct);
                     queries.pushFifoEntry(currentCategory , currentProduct , quantity , duration);
+                    quantityET.setText("");
+                    new CustomToast(getApplicationContext()).showToast("New entry inserted" , "SUCCESS");
+                }else{
+                    new CustomToast(getApplicationContext()).showToast("Something missing" , "WARNING");
                 }
             }
         });

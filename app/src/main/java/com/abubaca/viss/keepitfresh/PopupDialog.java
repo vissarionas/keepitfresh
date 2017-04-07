@@ -2,10 +2,13 @@ package com.abubaca.viss.keepitfresh;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -60,25 +63,24 @@ public class PopupDialog {
 
     void addProduct(final String categoryName){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
-        final EditText productET = new EditText(activity);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        productET.setLayoutParams(params);
-        productET.setHint("type new product");
-        productET.setInputType(InputType.TYPE_CLASS_TEXT);
+        LayoutInflater layoutInflater = (LayoutInflater)activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = layoutInflater.inflate(R.layout.new_product_dialog, null);
+        final EditText productET = (EditText)view.findViewById(R.id.productNameET);
+        final EditText durationET = (EditText)view.findViewById(R.id.productDurationET);
         productET.setFilters(new InputFilter[] {new InputFilter.LengthFilter(30)});
-        productET.setSelection(productET.getText().length());
-        dialogBuilder.setView(productET);
+
+        dialogBuilder.setView(view);
         dialogBuilder.setPositiveButton(R.string.ok,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String productName = productET.getText().toString();
-                        if(!productName.equals("")){
-                            database = database.child(categoryName).child(productName);
-                            database.setValue("");
+                        String productDuration = durationET.getText().toString();
+                        if(!productName.equals("") && !productDuration.equals("")){
+                            database = database.child(categoryName).child(productName).child("duration");
+                            database.setValue(productDuration);
                             database = database.getParent();
+                            new CustomToast(activity.getApplicationContext()).showToast(productName+" inserted" , "SUCCESS");
                         }
                     }
                 });

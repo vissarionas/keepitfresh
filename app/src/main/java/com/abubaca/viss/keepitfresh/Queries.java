@@ -77,6 +77,18 @@ public class Queries {
         return productDuration;
     }
 
+    public String getProductCategory(String product){
+        String category = "";
+        if(dataSnapshot != null){
+            for(DataSnapshot categorySnapshot : dataSnapshot.getChildren()){
+                if(categorySnapshot.hasChild(product)){
+                    category = categorySnapshot.getKey();
+                }
+            }
+        }
+        return category;
+    }
+
     public List<Product> listProducts(){
         List<Product> productsList = new ArrayList<>();
         String product, duration;
