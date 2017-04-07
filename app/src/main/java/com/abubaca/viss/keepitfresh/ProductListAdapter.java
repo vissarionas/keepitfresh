@@ -1,9 +1,12 @@
 package com.abubaca.viss.keepitfresh;
 
 import android.app.Activity;
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -13,12 +16,12 @@ import java.util.List;
 
 public class ProductListAdapter extends BaseAdapter {
 
-    List<Product> products;
-    Activity activity;
+    private List<Product> products;
+    private LayoutInflater layoutInflater;
 
-    public ProductListAdapter(Activity activity, List<Product> products){
+    ProductListAdapter(Context context, List<Product> products){
         this.products = products;
-        this.activity = activity;
+        layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -38,7 +41,11 @@ public class ProductListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
+        convertView = layoutInflater.inflate(R.layout.product_list_item , parent , false);
+        TextView productListTV = (TextView)convertView.findViewById(R.id.product_list_TV);
+        TextView expireDateTV = (TextView)convertView.findViewById(R.id.expire_date_TV);
+        productListTV.setText(products.get(position).getName());
+        expireDateTV.setText(String.valueOf(products.get(position).getDuration()));
         return convertView;
     }
 }
